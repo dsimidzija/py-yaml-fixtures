@@ -82,7 +82,7 @@ class SQLAlchemyModelFactory(FactoryInterface):
         model_class = self.models[class_name]
         for col_name, value in model_class.__mapper__.all_orm_descriptors.items():
             if (isinstance(value, AssociationProxy)
-                    or (hasattr(value, 'impl') and value.impl.uses_objects)):
+                    or (hasattr(value, 'impl') and value.impl and value.impl.uses_objects)):
                 rv.add(col_name)
         return rv
 
