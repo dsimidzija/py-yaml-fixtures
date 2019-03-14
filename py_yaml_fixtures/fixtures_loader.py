@@ -137,7 +137,7 @@ class FixturesLoader:
                     # preload to determine identifier keys
                     with self._preloading_env() as env:
                         rendered_yaml = env.get_template(filename).render()
-                        data = yaml.load(rendered_yaml)
+                        data = yaml.load(rendered_yaml, Loader=yaml.SafeLoader)
                         if data:
                             class_name = filename[:filename.rfind('.')]
                             model_identifiers[class_name] = list(data.keys())
@@ -157,7 +157,7 @@ class FixturesLoader:
         rendered_yaml = self.env.get_template(filename).render(
             model_identifiers=model_identifiers)
         fixture_data, self.relationships[class_name] = self._post_process_yaml_data(
-            yaml.load(rendered_yaml),
+            yaml.load(rendered_yaml, Loader=yaml.SafeLoader),
             self.factory.get_relationships(class_name))
 
         for identifier_key, data in fixture_data.items():
