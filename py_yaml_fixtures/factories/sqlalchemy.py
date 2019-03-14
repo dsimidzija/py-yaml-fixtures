@@ -19,7 +19,8 @@ class SQLAlchemyModelFactory(FactoryInterface):
                  session: sa_orm.Session,
                  models: Union[List[type], Dict[str, type]],
                  date_factory: Optional[FunctionType] = None,
-                 datetime_factory: Optional[FunctionType] = None):
+                 datetime_factory: Optional[FunctionType] = None,
+                 bytes_factory: Optional[FunctionType] = None):
         """
         :param session: the sqlalchemy session
         :param models: list of model classes, or dictionary of models by name
@@ -35,6 +36,7 @@ class SQLAlchemyModelFactory(FactoryInterface):
         self.model_instances = {}
         self.datetime_factory = datetime_factory or utils.datetime_factory
         self.date_factory = date_factory or utils.date_factory
+        self.bytes_factory = bytes_factory or utils.bytes_factory
 
     def create_or_update(self, identifier: Identifier, data: Dict[str, Any]):
         instance = self._get_existing(identifier, data)
@@ -101,6 +103,8 @@ class SQLAlchemyModelFactory(FactoryInterface):
                 rv[col_name] = self.date_factory(value)
             elif col.type.python_type == dt.datetime:
                 rv[col_name] = self.datetime_factory(value)
+            elif col.type.python_type == bytes:
+                rv[col_name] = self.bytes_factory(value)
         return rv
 
     def commit(self):

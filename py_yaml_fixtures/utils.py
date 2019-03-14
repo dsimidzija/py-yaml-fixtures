@@ -25,6 +25,10 @@ def date_factory(value):
         return dt.date
 
 
+def bytes_factory(value):
+    return bytes(value, 'raw_unicode_escape')
+
+
 def random_model(ctx, model_class_name):
     """
     Get a random model identifier by class name. For example::
